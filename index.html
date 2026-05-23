@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="盼盼女神 - 全球领先的追星服务平台，连接粉丝与偶像，打造专属粉丝文化生态。">
+    <meta name="baidu-site-verification" content="codeva-btjX4vn3Xl" />
+    <title>盼盼女神 | 追星服务平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== Reset & Base ===== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', 'Noto Serif SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1a1a2e;
+            background: #faf8f5;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; display: block; }
+        ul { list-style: none; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* ===== Typography ===== */
+        .section-tag {
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #c9a96e;
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-family: 'Inter', sans-serif;
+        }
+        .section-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+        .section-desc {
+            font-size: 1.05rem;
+            color: #666;
+            max-width: 600px;
+            line-height: 1.8;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-header .section-desc {
+            margin: 0 auto;
+        }
+
+        /* ===== Navigation ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.4s ease;
+            background: transparent;
+        }
+        .navbar.scrolled {
+            background: rgba(250, 248, 245, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 12px 0;
+            box-shadow: 0 1px 30px rgba(0,0,0,0.06);
+        }
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            transition: color 0.3s;
+        }
+        .navbar.scrolled .nav-logo { color: #1a1a2e; }
+        .nav-logo .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #c9a96e, #e8c88a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+        .nav-links a {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.85);
+            transition: color 0.3s;
+            position: relative;
+            padding: 4px 0;
+        }
+        .navbar.scrolled .nav-links a { color: rgba(26,26,46,0.75); }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #c9a96e;
+            transition: width 0.3s;
+        }
+        .nav-links a:hover { color: #c9a96e; }
+        .nav-links a:hover::after { width: 100%; }
+        .navbar.scrolled .nav-links a:hover { color: #c9a96e; }
+
+        .nav-cta {
+            padding: 8px 24px;
+            border: 1.5px solid rgba(255,255,255,0.4);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #fff;
+            transition: all 0.3s;
+        }
+        .navbar.scrolled .nav-cta {
+            border-color: #c9a96e;
+            color: #c9a96e;
+        }
+        .nav-cta:hover {
+            background: #c9a96e;
+            border-color: #c9a96e;
+            color: #fff !important;
+        }
+
+        /* Mobile Menu */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+            background: none;
+            border: none;
+        }
+        .menu-toggle span {
+            width: 26px;
+            height: 2px;
+            background: #fff;
+            transition: all 0.3s;
+        }
+        .navbar.scrolled .menu-toggle span { background: #1a1a2e; }
+
+        /* ===== Hero ===== */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(201,169,110,0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero .container {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            padding-top: 80px;
+        }
+        .hero-content { padding-right: 20px; }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 18px;
+            background: rgba(201,169,110,0.15);
+            border: 1px solid rgba(201,169,110,0.3);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: #e8c88a;
+            font-weight: 500;
+            margin-bottom: 28px;
+        }
+        .hero-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: #c9a96e;
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .hero h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #e8c88a, #c9a96e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.8;
+            margin-bottom: 36px;
+            max-width: 520px;
+        }
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 36px;
+            background: linear-gradient(135deg, #c9a96e, #e8c88a);
+            color: #1a1a2e;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(201,169,110,0.35);
+        }
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            border: 1.5px solid rgba(255,255,255,0.25);
+            color: rgba(255,255,255,0.85);
+            font-weight: 500;
+            font-size: 0.95rem;
+            border-radius: 50px;
+            transition: all 0.3s;
+            background: transparent;
+            cursor: pointer;
+        }
+        .btn-outline:hover {
+            border-color: #c9a96e;
+            color: #c9a96e;
+        }
+
+        .hero-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            backdrop-filter: blur(10px);
+        }
+        .hero-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .hero-stat {
+            text-align: center;
+            padding: 20px 12px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .hero-stat .number {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #e8c88a;
+        }
+        .hero-stat .label {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 4px;
+        }
+        .hero-stat.full { grid-column: 1 / -1; }
+
+        /* Floating elements */
+        .float-element {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* ===== Sections Common ===== */
+        section { padding: 100px 0; }
+        .section-light { background: #faf8f5; }
+        .section-dark {
+            background: #1a1a2e;
+            color: #fff;
+        }
+        .section-dark .section-title { color: #fff; }
+        .section-dark .section-desc { color: rgba(255,255,255,0.6); }
+        .section-dark .section-tag { color: #e8c88a; }
+
+        /* ===== Features / 全球粉丝群 ===== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .feature-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 40px 32px;
+            transition: all 0.4s;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.06);
+        }
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+        }
+        .feature-icon.gold { background: rgba(201,169,110,0.12); color: #c9a96e; }
+        .feature-icon.rose { background: rgba(212, 165, 165, 0.12); color: #d4a5a5; }
+        .feature-icon.navy { background: rgba(15, 52, 96, 0.1); color: #0f3460; }
+        .feature-card h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1a1a2e;
+        }
+        .feature-card p {
+            font-size: 0.92rem;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        /* ===== 盼盼周边 (Products) ===== */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+        }
+        .product-img {
+            height: 240px;
+            background: linear-gradient(135deg, #f0ebe3, #e8e0d3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #c9a96e;
+            position: relative;
+            overflow: hidden;
+        }
+        .product-img::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.03));
+        }
+        .product-body {
+            padding: 24px 28px 28px;
+        }
+        .product-body .tag {
+            display: inline-block;
+            padding: 3px 12px;
+            background: rgba(201,169,110,0.1);
+            color: #c9a96e;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 50px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .product-body h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+        .product-body p {
+            font-size: 0.88rem;
+            color: #888;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .product-body .price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #c9a96e;
+        }
+        .product-body .price small {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #999;
+        }
+
+        /* ===== 商业合作 ===== */
+        .cooperation-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        .coop-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 40px 36px;
+            transition: all 0.4s;
+        }
+        .coop-card:hover {
+            border-color: rgba(201,169,110,0.3);
+            transform: translateY(-4px);
+        }
+        .coop-card .icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+        .coop-card h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .coop-card p {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.55);
+            line-height: 1.7;
+        }
+
+        /* ===== 盼盼工作室 ===== */
+        .studio-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        .studio-text h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a1a2e;
+        }
+        .studio-text p {
+            color: #666;
+            line-height: 1.9;
+            margin-bottom: 16px;
+        }
+        .studio-text .highlight-text {
+            font-size: 1.1rem;
+            color: #c9a96e;
+            font-weight: 600;
+            border-left: 3px solid #c9a96e;
+            padding-left: 20px;
+            margin: 24px 0;
+        }
+        .studio-image {
+            height: 420px;
+            background: linear-gradient(135deg, #f0ebe3, #ddd5c5);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #c9a96e;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Team grid */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 50px;
+        }
+        .team-member {
+            text-align: center;
+            padding: 30px 20px;
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: all 0.3s;
+        }
+        .team-member:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+        }
+        .team-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+        .team-avatar.gold { background: rgba(201,169,110,0.12); color: #c9a96e; }
+        .team-avatar.rose { background: rgba(212, 165, 165, 0.12); color: #d4a5a5; }
+        .team-avatar.navy { background: rgba(15, 52, 96, 0.1); color: #0f3460; }
+        .team-member h4 {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #1a1a2e;
+        }
+        .team-member .role {
+            font-size: 0.82rem;
+            color: #c9a96e;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        /* ===== 联系我们 ===== */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+        .contact-info h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .contact-info p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+        .contact-item .ci-icon {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 10px;
+            background: rgba(201,169,110,0.1);
+            color: #c9a96e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        .contact-item .ci-label {
+            font-size: 0.82rem;
+            color: #999;
+            font-weight: 500;
+        }
+        .contact-item .ci-value {
+            font-size: 0.95rem;
+            color: #1a1a2e;
+            font-weight: 500;
+        }
+
+        .contact-form {
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 6px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #eee;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            font-family: inherit;
+            background: #faf8f5;
+            transition: all 0.3s;
+            outline: none;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #c9a96e;
+            box-shadow: 0 0 0 3px rgba(201,169,110,0.1);
+            background: #fff;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #c9a96e, #e8c88a);
+            color: #1a1a2e;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(201,169,110,0.3);
+        }
+
+        /* ===== Footer ===== */
+        footer {
+            background: #1a1a2e;
+            color: rgba(255,255,255,0.5);
+            padding: 60px 0 30px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-brand .nav-logo { color: #fff; font-size: 1.2rem; margin-bottom: 12px; }
+        .footer-brand p {
+            font-size: 0.88rem;
+            line-height: 1.8;
+            max-width: 320px;
+        }
+        .footer-col h4 {
+            color: #fff;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .footer-col a {
+            display: block;
+            font-size: 0.85rem;
+            padding: 5px 0;
+            transition: color 0.3s;
+        }
+        .footer-col a:hover { color: #c9a96e; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+        }
+        .footer-socials {
+            display: flex;
+            gap: 12px;
+        }
+        .footer-socials a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        .footer-socials a:hover {
+            border-color: #c9a96e;
+            color: #c9a96e;
+            background: rgba(201,169,110,0.1);
+        }
+
+        /* ===== Scroll Animation ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 1024px) {
+            .hero .container { grid-template-columns: 1fr; text-align: center; }
+            .hero-content { padding-right: 0; }
+            .hero p { margin: 0 auto 36px; }
+            .hero-actions { justify-content: center; }
+            .hero-card { margin: 0 auto; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links, .nav-cta { display: none; }
+            .menu-toggle { display: flex; }
+
+            .nav-links.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(250,248,245,0.98);
+                backdrop-filter: blur(20px);
+                padding: 24px;
+                gap: 16px;
+                border-bottom: 1px solid rgba(0,0,0,0.06);
+            }
+            .nav-links.active a { color: #1a1a2e; }
+
+            .features-grid { grid-template-columns: 1fr; }
+            .products-grid { grid-template-columns: 1fr; }
+            .cooperation-grid { grid-template-columns: 1fr; }
+            .studio-content { grid-template-columns: 1fr; }
+            .team-grid { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+
+            section { padding: 60px 0; }
+            .coop-card { padding: 28px 24px; }
+            .contact-form { padding: 28px 24px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-stats { grid-template-columns: 1fr 1fr; }
+            .hero-card { padding: 24px; }
+        }
+
+        /* ===== Decorative ===== */
+        .gold-line {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #c9a96e, #e8c88a);
+            border-radius: 2px;
+            margin: 0 auto 20px;
+        }
+        .section-header .gold-line { margin: 0 auto 20px; }
+    </style>
+</head>
+<body>
+
+<!-- ===== Navigation ===== -->
+<nav class="navbar" id="navbar">
+    <div class="container">
+        <a href="#home" class="nav-logo">
+            <span class="logo-icon">✦</span>
+            盼盼女神
+        </a>
+        <div class="nav-links" id="navLinks">
+            <a href="#home">首页</a>
+            <a href="#fans">全球粉丝群</a>
+            <a href="#products">盼盼周边</a>
+            <a href="#cooperation">商业合作</a>
+            <a href="#studio">盼盼工作室</a>
+            <a href="#contact">联系我们</a>
+        </div>
+        <a href="#contact" class="nav-cta">立即咨询</a>
+        <button class="menu-toggle" id="menuToggle" aria-label="菜单">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</nav>
+
+<!-- ===== Hero / 首页 ===== -->
+<section class="hero" id="home">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                全球追星服务领军品牌
+            </div>
+            <h1>
+                让每一份热爱<br>
+                <span class="highlight">都有回响</span>
+            </h1>
+            <p>
+                盼盼女神是全球化追星服务平台，连接全球粉丝与偶像文化，
+                提供粉丝社群运营、周边衍生品、活动策划等一站式服务，
+                让追星体验更纯粹、更温暖。
+            </p>
+            <div class="hero-actions">
+                <a href="#fans" class="btn-primary">
+                    探索更多 →
+                </a>
+                <a href="#contact" class="btn-outline">
+                    商务合作
+                </a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-card">
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="number">500万+</div>
+                        <div class="label">全球粉丝</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="number">120+</div>
+                        <div class="label">合作艺人</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="number">3000+</div>
+                        <div class="label">线下活动</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="number">50+</div>
+                        <div class="label">覆盖国家</div>
+                    </div>
+                    <div class="hero-stat full">
+                        <div class="number">98.7%</div>
+                        <div class="label">粉丝满意度</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 全球粉丝群 ===== -->
+<section class="section-light" id="fans">
+    <div class="container">
+        <div class="section-header reveal">
+            <div class="section-tag">Global Community</div>
+            <h2 class="section-title">全球粉丝群</h2>
+            <div class="gold-line"></div>
+            <p class="section-desc">
+                跨越国界与语言的藩篱，打造全球粉丝的温暖家园。
+                在这里，每一份热爱都被看见。
+            </p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card reveal reveal-delay-1">
+                <div class="feature-icon gold">🌐</div>
+                <h3>全球粉丝社区</h3>
+                <p>
+                    覆盖50+国家和地区的粉丝社群网络，支持多语言互动交流。
+                    线上线下联动，让粉丝无论身在何处都能找到归属。
+                </p>
+            </div>
+            <div class="feature-card reveal reveal-delay-2">
+                <div class="feature-icon rose">💬</div>
+                <h3>专属互动空间</h3>
+                <p>
+                    为每个粉丝群体打造专属社群空间，包含实时聊天、 
+                    资源共享、活动通知等功能，打造深度粉丝连接。
+                </p>
+            </div>
+            <div class="feature-card reveal reveal-delay-3">
+                <div class="feature-icon navy">🎫</div>
+                <h3>粉丝活动运营</h3>
+                <p>
+                    从线上应援到线下见面会，从生日企划到周年庆典，
+                    专业团队全程策划执行，让每一次活动都成为难忘回忆。
+                </p>
+            </div>
+            <div class="feature-card reveal reveal-delay-1">
+                <div class="feature-icon gold">📊</div>
+                <h3>数据化运营</h3>
+                <p>
+                    通过大数据分析精准了解粉丝需求，优化社群运营策略，
+                    提升粉丝活跃度与粘性，构建健康可持续的粉丝生态。
+                </p>
+            </div>
+            <div class="feature-card reveal reveal-delay-2">
+                <div class="feature-icon rose">🎯</div>
+                <h3>应援组织管理</h3>
+                <p>
+                    为应援站、后援会提供专业化管理工具和资源支持，
+                    帮助组织高效运转，让粉丝力量最大化。
+                </p>
+            </div>
+            <div class="feature-card reveal reveal-delay-3">
+                <div class="feature-icon navy">🤝</div>
+                <h3>跨圈层联动</h3>
+                <p>
+                    打破粉丝圈层壁垒，促进不同粉丝群体之间的交流合作，
+                    共同打造更加多元、包容的追星文化生态。
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 盼盼周边 ===== -->
+<section class="section-light" id="products" style="background: #fff;">
+    <div class="container">
+        <div class="section-header reveal">
+            <div class="section-tag">Merchandise</div>
+            <h2 class="section-title">盼盼周边</h2>
+            <div class="gold-line"></div>
+            <p class="section-desc">
+                精心设计的官方正版周边产品，每一件都承载着对偶像的热爱。
+                高品质、有温度、值得珍藏。
+            </p>
+        </div>
+        <div class="products-grid">
+            <div class="product-card reveal reveal-delay-1">
+                <div class="product-img">📸</div>
+                <div class="product-body">
+                    <span class="tag">限量版</span>
+                    <h3>「星光照耀」写真集</h3>
+                    <p>192页精装典藏版，收录独家未公开影像，含亲笔签名页。</p>
+                    <div class="price">¥268 <small>已售 12,000+</small></div>
+                </div>
+            </div>
+            <div class="product-card reveal reveal-delay-2">
+                <div class="product-img">🧸</div>
+                <div class="product-body">
+                    <span class="tag">人气款</span>
+                    <h3>「盼盼」官方玩偶</h3>
+                    <p>30cm高质感绒毛公仔，精致刺绣工艺，粉丝必入收藏品。</p>
+                    <div class="price">¥188 <small>已售 25,000+</small></div>
+                </div>
+            </div>
+            <div class="product-card reveal reveal-delay-3">
+                <div class="product-img">👕</div>
+                <div class="product-body">
+                    <span class="tag">应援必备</span>
+                    <h3>「追光者」应援T恤</h3>
+                    <p>320G重磅纯棉，专属印花设计，多色可选，舒适有型。</p>
+                    <div class="price">¥158 <small>已售 18,000+</small></div>
+                </div>
+            </div>
+            <div class="product-card reveal reveal-delay-1">
+                <div class="product-img">💿</div>
+                <div class="product-body">
+                    <span class="tag">典藏版</span>
+                    <h3>「星河万里」专辑礼盒</h3>
+                    <p>精装专辑+歌词本+限定海报+徽章套装，豪华收藏体验。</p>
+                    <div class="price">¥328 <small>已售 8,000+</small></div>
+                </div>
+            </div>
+            <div class="product-card reveal reveal-delay-2">
+                <div class="product-img">🎀</div>
+                <div class="product-body">
+                    <span class="tag">新品</span>
+                    <h3>「流光」应援手灯</h3>
+                    <p>蓝牙智能控色，支持自定义光效，官方统一应援色。</p>
+                    <div class="price">¥138 <small>已售 35,000+</small></div>
+                </div>
+            </div>
+            <div class="product-card reveal reveal-delay-3">
+                <div class="product-img">📓</div>
+                <div class="product-body">
+                    <span class="tag">限定</span>
+                    <h3>「追星日记」手帐套装</h3>
+                    <p>含日程本、贴纸包、胶带套装，记录追星的每个美好瞬间。</p>
+                    <div class="price">¥98 <small>已售 20,000+</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 商业合作 ===== -->
+<section class="section-dark" id="cooperation">
+    <div class="container">
+        <div class="section-header reveal">
+            <div class="section-tag">Business Cooperation</div>
+            <h2 class="section-title">商业合作</h2>
+            <div class="gold-line"></div>
+            <p class="section-desc">
+                开放多元的合作生态，期待与品牌方、经纪公司、平台伙伴
+                携手共创粉丝经济新价值。
+            </p>
+        </div>
+        <div class="cooperation-grid">
+            <div class="coop-card reveal reveal-delay-1">
+                <div class="icon">🏢</div>
+                <h3>品牌联名合作</h3>
+                <p>
+                    与品牌方共同开发联名产品，整合粉丝资源进行精准营销推广。
+                    提供从策划、设计到推广的全链路服务，实现品牌与粉丝的双赢。
+                </p>
+            </div>
+            <div class="coop-card reveal reveal-delay-2">
+                <div class="icon">🎤</div>
+                <h3>艺人经纪合作</h3>
+                <p>
+                    为艺人提供粉丝运营、数据监测、舆情管理等专业服务。
+                    协助艺人团队建立健康、活跃的粉丝生态，提升商业价值。
+                </p>
+            </div>
+            <div class="coop-card reveal reveal-delay-3">
+                <div class="icon">🎪</div>
+                <h3>活动策划执行</h3>
+                <p>
+                    承接各类粉丝见面会、演唱会应援、生日企划、周年庆典等
+                    活动的策划与落地执行，拥有丰富的线下活动运营经验。
+                </p>
+            </div>
+            <div class="coop-card reveal reveal-delay-4">
+                <div class="icon">📱</div>
+                <h3>平台生态合作</h3>
+                <p>
+                    与社交平台、电商平台、内容平台深度合作，共同打造
+                    粉丝经济基础设施，探索创新的粉丝互动与变现模式。
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 盼盼工作室 ===== -->
+<section class="section-light" id="studio">
+    <div class="container">
+        <div class="section-header reveal">
+            <div class="section-tag">Our Studio</div>
+            <h2 class="section-title">盼盼工作室</h2>
+            <div class="gold-line"></div>
+            <p class="section-desc">
+                一群热爱追星文化的年轻人，用专业与热忱重新定义粉丝服务。
+            </p>
+        </div>
+        <div class="studio-content reveal">
+            <div class="studio-text">
+                <h2>用热爱创造价值</h2>
+                <p>
+                    盼盼工作室成立于2020年，是国内领先的粉丝服务运营团队。
+                    我们深知追星文化对年轻人意味着什么——它不只是一种消遣，
+                    更是一种情感寄托、一种身份认同、一种生活方式。
+                </p>
+                <p>
+                    正因如此，我们始终秉持"以粉丝为中心"的理念，
+                    用专业的态度和真诚的服务，让每一份热爱都有处安放、都有回响。
+                </p>
+                <div class="highlight-text">
+                    "最好的粉丝服务，是让粉丝感受到被理解、被尊重、被珍视。"
+                </div>
+                <p>
+                    截至目前，盼盼工作室已服务超过120位艺人及品牌客户，
+                    运营粉丝社群超过500个，策划执行活动超过3000场。
+                </p>
+                <div class="team-grid">
+                    <div class="team-member reveal reveal-delay-1">
+                        <div class="team-avatar gold">👩‍💼</div>
+                        <h4>林思雨</h4>
+                        <div class="role">创始人 & CEO</div>
+                    </div>
+                    <div class="team-member reveal reveal-delay-2">
+                        <div class="team-avatar rose">👨‍💻</div>
+                        <h4>陈子轩</h4>
+                        <div class="role">运营总监</div>
+                    </div>
+                    <div class="team-member reveal reveal-delay-3">
+                        <div class="team-avatar navy">🎨</div>
+                        <h4>张艺馨</h4>
+                        <div class="role">创意总监</div>
+                    </div>
+                </div>
+            </div>
+            <div class="studio-image">
+                ✦ 盼盼工作室
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 联系我们 ===== -->
+<section class="section-light" id="contact" style="background: #fff;">
+    <div class="container">
+        <div class="section-header reveal">
+            <div class="section-tag">Contact Us</div>
+            <h2 class="section-title">联系我们</h2>
+            <div class="gold-line"></div>
+            <p class="section-desc">
+                无论您是粉丝、品牌方还是合作伙伴，都欢迎与我们取得联系。
+                期待与您携手同行。
+            </p>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-info reveal">
+                <h3>联系方式</h3>
+                <p>
+                    我们的团队将在24小时内回复您的留言。
+                    紧急事务请直接通过电话与我们联系。
+                </p>
+                <div class="contact-item">
+                    <div class="ci-icon">📍</div>
+                    <div>
+                        <div class="ci-label">地址</div>
+                        <div class="ci-value">中国上海市浦东新区世纪大道100号</div>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="ci-icon">📧</div>
+                    <div>
+                        <div class="ci-label">邮箱</div>
+                        <div class="ci-value">hello@panpangoddess.com</div>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="ci-icon">📞</div>
+                    <div>
+                        <div class="ci-label">电话</div>
+                        <div class="ci-value">+86 21 6888-8888</div>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="ci-icon">🕐</div>
+                    <div>
+                        <div class="ci-label">工作时间</div>
+                        <div class="ci-value">周一至周五 9:00 - 18:00</div>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="ci-icon">💬</div>
+                    <div>
+                        <div class="ci-label">官方微信</div>
+                        <div class="ci-value">盼盼女神官方</div>
+                    </div>
+                </div>
+            </div>
+            <form class="contact-form reveal reveal-delay-2" id="contactForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">您的姓名</label>
+                        <input type="text" id="name" placeholder="请输入姓名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">电子邮箱</label>
+                        <input type="email" id="email" placeholder="请输入邮箱" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="subject">咨询类型</label>
+                    <select id="subject">
+                        <option value="">请选择咨询类型</option>
+                        <option value="fan">粉丝社群加入</option>
+                        <option value="product">周边产品咨询</option>
+                        <option value="cooperation">商业合作洽谈</option>
+                        <option value="studio">工作室业务</option>
+                        <option value="other">其他咨询</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">留言内容</label>
+                    <textarea id="message" placeholder="请详细描述您的需求或问题..." required></textarea>
+                </div>
+                <button type="submit" class="btn-submit">发送留言 →</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="nav-logo">
+                    <span class="logo-icon">✦</span>
+                    盼盼女神
+                </div>
+                <p>
+                    全球领先的追星服务平台，致力连接每一个热爱的心。
+                    让追星，成为一种更美好的生活方式。
+                </p>
+            </div>
+            <div class="footer-col">
+                <h4>快速链接</h4>
+                <a href="#home">首页</a>
+                <a href="#fans">全球粉丝群</a>
+                <a href="#products">盼盼周边</a>
+                <a href="#studio">盼盼工作室</a>
+            </div>
+            <div class="footer-col">
+                <h4>合作</h4>
+                <a href="#cooperation">商业合作</a>
+                <a href="#contact">联系我们</a>
+                <a href="#">加入我们</a>
+                <a href="#">常见问题</a>
+            </div>
+            <div class="footer-col">
+                <h4>法律信息</h4>
+                <a href="#">服务条款</a>
+                <a href="#">隐私政策</a>
+                <a href="#">版权声明</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 盼盼女神 Panpan Goddess. All rights reserved.</span>
+            <div class="footer-socials">
+                <a href="#" aria-label="微信">💬</a>
+                <a href="#" aria-label="微博">📱</a>
+                <a href="#" aria-label="小红书">📕</a>
+                <a href="#" aria-label="抖音">🎵</a>
+                <a href="#" aria-label="B站">📺</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // ===== Navbar scroll effect =====
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 60) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // ===== Mobile menu toggle =====
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+    });
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+        });
+    });
+
+    // ===== Scroll reveal animation =====
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // ===== Contact form =====
+    const contactForm = document.getElementById('contactForm');
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const btn = contactForm.querySelector('.btn-submit');
+        const originalText = btn.textContent;
+        btn.textContent = '发送中...';
+        btn.disabled = true;
+        setTimeout(() => {
+            btn.textContent = '✓ 已发送，感谢您的留言！';
+            btn.style.background = '#4CAF50';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+                btn.disabled = false;
+                contactForm.reset();
+            }, 2500);
+        }, 1200);
+    });
+
+    // ===== Smooth counter animation =====
+    function animateCounter(el) {
+        const text = el.textContent;
+        const match = text.match(/^([\d,.]+)([+\u4e00-\u9fa5%]*)$/);
+        if (!match) return;
+        const numStr = match[1].replace(/,/g, '');
+        const suffix = match[2] || '';
+        const target = parseFloat(numStr);
+        if (isNaN(target)) return;
+
+        const duration = 2000;
+        const startTime = performance.now();
+        const isFloat = numStr.includes('.');
+
+        function update(currentTime) {
+            const progress = Math.min((currentTime - startTime) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = eased * target;
+
+            let display;
+            if (isFloat) {
+                display = current.toFixed(1);
+            } else {
+                display = Math.floor(current).toLocaleString();
+            }
+            el.textContent = display + suffix;
+
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            } else {
+                el.textContent = match[1] + suffix;
+            }
+        }
+        requestAnimationFrame(update);
+    }
+
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                counterObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.hero-stat .number').forEach(el => counterObserver.observe(el));
+</script>
+
+<!-- 百度自动推送 -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

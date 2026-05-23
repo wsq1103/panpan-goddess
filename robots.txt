@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://wsq1103.github.io/panpan-goddess/sitemap.xml

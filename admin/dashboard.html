@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>盼盼女神 · 管理后台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', 'Noto Serif SC', sans-serif;
+            background: #f0eeeb;
+            color: #1a1a2e;
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 240px;
+            min-width: 240px;
+            background: #1a1a2e;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            transition: transform 0.3s;
+        }
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-header .logo-icon {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, #c9a96e, #e8c88a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+        .sidebar-header h2 { font-family: 'Noto Serif SC', serif; font-size: 1.05rem; font-weight: 700; }
+        .sidebar-header .sub { font-size: 0.7rem; color: rgba(255,255,255,0.4); font-weight: 400; }
+        .sidebar-nav { flex: 1; padding: 12px 10px; overflow-y: auto; }
+        .nav-section {
+            font-size: 0.7rem; color: rgba(255,255,255,0.3);
+            text-transform: uppercase; letter-spacing: 2px;
+            padding: 16px 12px 6px; font-weight: 600;
+        }
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px; border-radius: 10px; cursor: pointer;
+            font-size: 0.88rem; font-weight: 500;
+            color: rgba(255,255,255,0.55); transition: all 0.2s; margin-bottom: 2px;
+        }
+        .nav-item:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.05); }
+        .nav-item.active { color: #fff; background: rgba(201,169,110,0.15); }
+        .nav-item .icon { font-size: 1.05rem; width: 24px; text-align: center; }
+        .nav-item .badge {
+            margin-left: auto; background: rgba(201,169,110,0.2);
+            color: #e8c88a; font-size: 0.7rem; padding: 2px 8px;
+            border-radius: 50px; font-weight: 600;
+        }
+        .sidebar-footer {
+            padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .sidebar-footer .user { display: flex; align-items: center; gap: 10px; }
+        .sidebar-footer .avatar {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: linear-gradient(135deg, #c9a96e, #e8c88a);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem; color: #1a1a2e; font-weight: 700;
+        }
+        .sidebar-footer .user-info { flex: 1; }
+        .sidebar-footer .user-name { font-size: 0.85rem; font-weight: 600; }
+        .sidebar-footer .user-role { font-size: 0.72rem; color: rgba(255,255,255,0.4); }
+        .sidebar-footer .logout-btn {
+            width: 32px; height: 32px; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1); background: transparent;
+            color: rgba(255,255,255,0.4); cursor: pointer; font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .sidebar-footer .logout-btn:hover { border-color: rgba(231,76,60,0.4); color: #e74c3c; background: rgba(231,76,60,0.1); }
+        .main { margin-left: 240px; flex: 1; min-height: 100vh; }
+        .main-header {
+            padding: 20px 32px; background: #fff;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 50;
+        }
+        .main-header h1 { font-family: 'Noto Serif SC', serif; font-size: 1.2rem; font-weight: 700; }
+        .main-header .breadcrumb { font-size: 0.8rem; color: #999; }
+        .main-header .breadcrumb span { color: #1a1a2e; }
+        .header-actions { display: flex; align-items: center; gap: 12px; }
+        .header-actions .time { font-size: 0.82rem; color: #888; }
+        .header-actions .notification {
+            width: 36px; height: 36px; border-radius: 10px;
+            border: 1px solid #eee; background: #faf8f5;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 1rem; position: relative;
+        }
+        .header-actions .notification .dot {
+            position: absolute; top: 6px; right: 6px;
+            width: 7px; height: 7px; background: #e74c3c; border-radius: 50%;
+        }
+        .main-content { padding: 28px 32px; }
+        .sidebar-toggle { display: none; width: 36px; height: 36px; border-radius: 10px; border: 1px solid #eee; background: #faf8f5; cursor: pointer; font-size: 1.1rem; align-items: center; justify-content: center; }
+        .sidebar-overlay { display: none; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 28px; }
+        .stat-card {
+            background: #fff; border-radius: 14px; padding: 22px 24px;
+            border: 1px solid rgba(0,0,0,0.04); transition: transform 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-2px); }
+        .stat-card .stat-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .stat-card .stat-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+        }
+        .stat-card .stat-icon.gold { background: rgba(201,169,110,0.12); color: #c9a96e; }
+        .stat-card .stat-icon.rose { background: rgba(212,165,165,0.12); color: #d4a5a5; }
+        .stat-card .stat-icon.navy { background: rgba(15,52,96,0.1); color: #0f3460; }
+        .stat-card .stat-icon.green { background: rgba(39,174,96,0.1); color: #27ae60; }
+        .stat-card .stat-change { font-size: 0.75rem; padding: 2px 10px; border-radius: 50px; font-weight: 600; }
+        .stat-card .stat-change.up { background: rgba(39,174,96,0.1); color: #27ae60; }
+        .stat-card .stat-change.down { background: rgba(231,76,60,0.1); color: #e74c3c; }
+        .stat-card .stat-number { font-family: 'Noto Serif SC', serif; font-size: 1.8rem; font-weight: 700; line-height: 1.2; }
+        .stat-card .stat-label { font-size: 0.82rem; color: #888; margin-top: 4px; }
+        .panel { background: #fff; border-radius: 14px; border: 1px solid rgba(0,0,0,0.04); overflow: hidden; margin-bottom: 24px; }
+        .panel-header {
+            padding: 18px 24px; border-bottom: 1px solid rgba(0,0,0,0.04);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .panel-header h3 { font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700; }
+        .panel-header .action-btn {
+            padding: 6px 16px; border-radius: 8px; border: 1px solid #c9a96e;
+            background: transparent; color: #c9a96e; font-size: 0.8rem;
+            font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .panel-header .action-btn:hover { background: #c9a96e; color: #fff; }
+        .panel-header .action-btn.danger { border-color: #e74c3c; color: #e74c3c; }
+        .panel-header .action-btn.danger:hover { background: #e74c3c; color: #fff; }
+        .panel-body { padding: 24px; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        table th {
+            text-align: left; padding: 12px 16px; font-weight: 600;
+            color: #888; font-size: 0.78rem; text-transform: uppercase;
+            letter-spacing: 0.5px; border-bottom: 1px solid #f0eeeb;
+        }
+        table td { padding: 12px 16px; border-bottom: 1px solid #f5f3f0; }
+        table tr:last-child td { border-bottom: none; }
+        table .status {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 3px 12px; border-radius: 50px;
+            font-size: 0.78rem; font-weight: 600;
+        }
+        table .status.active { background: rgba(39,174,96,0.1); color: #27ae60; }
+        table .status.pending { background: rgba(241,196,15,0.1); color: #d4ac0d; }
+        table .status.inactive { background: rgba(231,76,60,0.1); color: #e74c3c; }
+        .table-actions { display: flex; gap: 6px; }
+        .table-actions button {
+            padding: 4px 12px; border-radius: 6px; border: none;
+            font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .table-actions .edit-btn { background: rgba(201,169,110,0.12); color: #c9a96e; }
+        .table-actions .edit-btn:hover { background: #c9a96e; color: #fff; }
+        .table-actions .del-btn { background: rgba(231,76,60,0.1); color: #e74c3c; }
+        .table-actions .del-btn:hover { background: #e74c3c; color: #fff; }
+        .table-actions .view-btn { background: rgba(15,52,96,0.1); color: #0f3460; }
+        .table-actions .view-btn:hover { background: #0f3460; color: #fff; }
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .activity-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid #f5f3f0; }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-dot { width: 10px; height: 10px; min-width: 10px; border-radius: 50%; margin-top: 6px; }
+        .activity-dot.gold { background: #c9a96e; }
+        .activity-dot.rose { background: #d4a5a5; }
+        .activity-dot.navy { background: #0f3460; }
+        .activity-item .act-content { flex: 1; }
+        .activity-item .act-text { font-size: 0.88rem; color: #444; }
+        .activity-item .act-time { font-size: 0.75rem; color: #aaa; margin-top: 2px; }
+        .settings-form .form-group { margin-bottom: 18px; }
+        .settings-form .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: #444; margin-bottom: 6px; }
+        .settings-form .form-group input,
+        .settings-form .form-group select,
+        .settings-form .form-group textarea {
+            width: 100%; padding: 10px 14px; border: 1.5px solid #eee;
+            border-radius: 8px; font-size: 0.9rem; font-family: inherit;
+            background: #faf8f5; transition: all 0.2s; outline: none;
+        }
+        .settings-form .form-group input:focus,
+        .settings-form .form-group select:focus,
+        .settings-form .form-group textarea:focus { border-color: #c9a96e; box-shadow: 0 0 0 3px rgba(201,169,110,0.1); }
+        .settings-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .btn-save {
+            padding: 10px 32px; background: linear-gradient(135deg, #c9a96e, #e8c88a);
+            color: #1a1a2e; font-weight: 600; font-size: 0.9rem;
+            border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s;
+        }
+        .btn-save:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,169,110,0.25); }
+        .btn-save.small { padding: 6px 16px; font-size: 0.8rem; }
+
+        /* Toast */
+        .toast {
+            position: fixed; top: 20px; right: 20px; padding: 12px 24px;
+            border-radius: 10px; font-size: 0.88rem; font-weight: 500;
+            color: #fff; opacity: 0; transform: translateX(30px);
+            transition: all 0.4s; z-index: 9999;
+        }
+        .toast.show { opacity: 1; transform: translateX(0); }
+        .toast.success { background: #27ae60; }
+        .toast.error { background: #e74c3c; }
+        .toast.info { background: #2980b9; }
+
+        /* Empty state */
+        .empty-state { text-align: center; padding: 40px 20px; color: #bbb; }
+        .empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
+        .empty-state p { font-size: 0.9rem; }
+
+        /* === Modal === */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4); z-index: 200;
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: #fff; border-radius: 16px;
+            width: 100%; max-width: 520px; max-height: 85vh;
+            overflow-y: auto; padding: 32px; position: relative;
+        }
+        .modal .close-btn {
+            position: absolute; top: 16px; right: 16px;
+            width: 32px; height: 32px; border-radius: 8px; border: none;
+            background: #f5f3f0; cursor: pointer; font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center; color: #888;
+        }
+        .modal h2 { font-family: 'Noto Serif SC', serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 20px; }
+        .modal .form-group { margin-bottom: 16px; }
+        .modal .form-group label { display: block; font-size: 0.83rem; font-weight: 600; color: #444; margin-bottom: 5px; }
+        .modal .form-group input,
+        .modal .form-group select,
+        .modal .form-group textarea {
+            width: 100%; padding: 10px 14px; border: 1.5px solid #eee;
+            border-radius: 8px; font-size: 0.9rem; font-family: inherit;
+            background: #faf8f5; transition: all 0.2s; outline: none;
+        }
+        .modal .form-group input:focus,
+        .modal .form-group select:focus,
+        .modal .form-group textarea:focus { border-color: #c9a96e; box-shadow: 0 0 0 3px rgba(201,169,110,0.1); }
+        .modal .form-group textarea { resize: vertical; min-height: 80px; }
+        .modal .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .modal .btn-submit {
+            width: 100%; padding: 12px; margin-top: 8px;
+            background: linear-gradient(135deg, #c9a96e, #e8c88a);
+            color: #1a1a2e; font-weight: 600; font-size: 0.92rem;
+            border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s;
+        }
+        .modal .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,169,110,0.25); }
+        .modal .btn-submit.danger { background: #e74c3c; color: #fff; }
+        .modal .btn-submit.danger:hover { background: #c0392b; }
+
+        /* === Confirm Dialog === */
+        .confirm-dialog { text-align: center; }
+        .confirm-dialog .confirm-icon { font-size: 3rem; margin-bottom: 12px; }
+        .confirm-dialog p { font-size: 0.95rem; color: #666; margin-bottom: 24px; }
+        .confirm-dialog .confirm-actions { display: flex; gap: 12px; justify-content: center; }
+
+        /* === Reply Modal === */
+        .reply-content { background: #faf8f5; border-radius: 10px; padding: 14px; margin-bottom: 16px; font-size: 0.88rem; color: #444; line-height: 1.6; }
+        .reply-meta { font-size: 0.78rem; color: #999; margin-bottom: 4px; }
+
+        /* Responsive */
+        @media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .grid-2 { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3); z-index: 90; }
+            .sidebar-overlay.show { display: block; }
+            .main { margin-left: 0; }
+            .sidebar-toggle { display: flex; }
+            .main-header { padding: 16px 20px; }
+            .main-content { padding: 20px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .header-actions .time { display: none; }
+        }
+        @media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr; } .settings-form .form-row { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ===== Modal Container ===== -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modalContent">
+        <button class="close-btn" id="modalClose">✕</button>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<!-- ===== Sidebar ===== -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="logo-icon">✦</div>
+        <div>
+            <h2>盼盼女神</h2>
+            <div class="sub">管理后台</div>
+        </div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section">概览</div>
+        <div class="nav-item active" data-page="dashboard"><span class="icon">📊</span> 数据总览</div>
+        <div class="nav-section">内容管理</div>
+        <div class="nav-item" data-page="fans"><span class="icon">🌐</span> 粉丝群管理 <span class="badge" id="badgeFans">0</span></div>
+        <div class="nav-item" data-page="products"><span class="icon">🎁</span> 周边商品 <span class="badge" id="badgeProducts">0</span></div>
+        <div class="nav-item" data-page="cooperation"><span class="icon">🤝</span> 商业合作 <span class="badge" id="badgeCoop">0</span></div>
+        <div class="nav-section">运营</div>
+        <div class="nav-item" data-page="studio"><span class="icon">🎬</span> 工作室管理</div>
+        <div class="nav-item" data-page="messages"><span class="icon">💬</span> 留言管理 <span class="badge" id="badgeMessages">0</span></div>
+        <div class="nav-section">系统</div>
+        <div class="nav-item" data-page="settings"><span class="icon">⚙️</span> 系统设置</div>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="user">
+            <div class="avatar">A</div>
+            <div class="user-info">
+                <div class="user-name" id="sidebarUserName">管理员</div>
+                <div class="user-role">超级管理员</div>
+            </div>
+            <button class="logout-btn" id="logoutBtn" title="退出登录">↩</button>
+        </div>
+    </div>
+</aside>
+
+<!-- ===== Main ===== -->
+<div class="main">
+    <header class="main-header">
+        <div style="display:flex;align-items:center;gap:12px;">
+            <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+            <div>
+                <h1 id="pageTitle">数据总览</h1>
+                <div class="breadcrumb">盼盼女神 / <span id="breadcrumbText">数据总览</span></div>
+            </div>
+        </div>
+        <div class="header-actions">
+            <span class="time" id="clockDisplay"></span>
+            <div class="notification">🔔<span class="dot"></span></div>
+        </div>
+    </header>
+    <div class="main-content">
+
+        <!-- ===== Dashboard ===== -->
+        <div class="page-section active" id="page-dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon gold">🌐</div>
+                        <span class="stat-change up">↑ 12.5%</span>
+                    </div>
+                    <div class="stat-number" id="statFans">0</div>
+                    <div class="stat-label">全球粉丝总数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon rose">🎁</div>
+                        <span class="stat-change up">↑ 8.3%</span>
+                    </div>
+                    <div class="stat-number" id="statSales">¥0</div>
+                    <div class="stat-label">本月周边销售额</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon navy">🤝</div>
+                        <span class="stat-change up">↑ 23.1%</span>
+                    </div>
+                    <div class="stat-number" id="statProjects">0</div>
+                    <div class="stat-label">合作项目数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon green">💬</div>
+                        <span class="stat-change up">↑ 2.1%</span>
+                    </div>
+                    <div class="stat-number" id="statSatisfaction">0</div>
+                    <div class="stat-label">粉丝满意度</div>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="panel">
+                    <div class="panel-header"><h3>最近活动</h3></div>
+                    <div class="panel-body" style="padding-top:0;" id="recentActivity">
+                        <div class="empty-state"><div class="icon">📭</div><p>暂无活动记录</p></div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header"><h3>热门周边 Top 5</h3></div>
+                    <div class="panel-body" style="padding-top:0;" id="topProducts">
+                        <div class="empty-state"><div class="icon">📦</div><p>暂无商品数据</p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-header"><h3>月度数据趋势</h3></div>
+                <div class="panel-body">
+                    <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:6px;height:120px;align-items:end;padding:0 8px;" id="trendChart">
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:#aaa;margin-top:8px;padding:0 4px;">
+                        <span>1月</span><span>3月</span><span>5月</span><span>7月</span><span>9月</span><span>11月</span>
+                    </div>
+                    <div style="text-align:center;margin-top:12px;font-size:0.8rem;color:#999;">📈 粉丝活跃度趋势（2026年度）</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Fans ===== -->
+        <div class="page-section" id="page-fans">
+            <div class="panel">
+                <div class="panel-header"><h3>粉丝群列表</h3><button class="action-btn" onclick="openFanModal()">+ 新建群组</button></div>
+                <div class="panel-body" style="padding:0;">
+                    <div class="table-wrap"><table><thead><tr><th>群组名称</th><th>地区</th><th>成员数</th><th>活跃度</th><th>状态</th><th>操作</th></tr></thead><tbody id="fansTableBody"></tbody></table></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Products ===== -->
+        <div class="page-section" id="page-products">
+            <div class="panel">
+                <div class="panel-header"><h3>周边商品管理</h3><button class="action-btn" onclick="openProductModal()">+ 添加商品</button></div>
+                <div class="panel-body" style="padding:0;">
+                    <div class="table-wrap"><table><thead><tr><th>商品名称</th><th>价格</th><th>销量</th><th>库存</th><th>状态</th><th>操作</th></tr></thead><tbody id="productsTableBody"></tbody></table></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Cooperation ===== -->
+        <div class="page-section" id="page-cooperation">
+            <div class="panel">
+                <div class="panel-header"><h3>合作项目管理</h3><button class="action-btn" onclick="openCoopModal()">+ 新建项目</button></div>
+                <div class="panel-body" style="padding:0;">
+                    <div class="table-wrap"><table><thead><tr><th>项目名称</th><th>合作方</th><th>类型</th><th>金额</th><th>进度</th><th>状态</th><th>操作</th></tr></thead><tbody id="coopTableBody"></tbody></table></div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-header"><h3>合作咨询列表</h3></div>
+                <div class="panel-body" style="padding:0;">
+                    <div class="table-wrap"><table><thead><tr><th>公司名称</th><th>联系人</th><th>合作意向</th><th>提交时间</th><th>状态</th><th>操作</th></tr></thead><tbody id="inquiryTableBody"></tbody></table></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Studio ===== -->
+        <div class="page-section" id="page-studio">
+            <div class="panel">
+                <div class="panel-header"><h3>工作室成员</h3><button class="action-btn" onclick="openStudioModal()">+ 添加成员</button></div>
+                <div class="panel-body" style="padding:0;">
+                    <div class="table-wrap"><table><thead><tr><th>姓名</th><th>职位</th><th>部门</th><th>入职时间</th><th>状态</th><th>操作</th></tr></thead><tbody id="studioTableBody"></tbody></table></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Messages ===== -->
+        <div class="page-section" id="page-messages">
+            <div class="panel">
+                <div class="panel-header"><h3>访客留言</h3><button class="action-btn" onclick="showToast('自动回复已开启','info')">⚡ 自动回复</button></div>
+                <div class="panel-body" style="padding:0;">
+                    <div class="table-wrap"><table><thead><tr><th>姓名</th><th>邮箱</th><th>咨询类型</th><th>留言内容</th><th>时间</th><th>状态</th><th>操作</th></tr></thead><tbody id="messagesTableBody"></tbody></table></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Settings ===== -->
+        <div class="page-section" id="page-settings">
+            <div class="panel">
+                <div class="panel-header"><h3>基本设置</h3></div>
+                <div class="panel-body">
+                    <form class="settings-form" id="settingsForm" onsubmit="saveSettings(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>网站名称</label>
+                                <input type="text" id="set_siteName" placeholder="网站名称">
+                            </div>
+                            <div class="form-group">
+                                <label>网站域名</label>
+                                <input type="text" id="set_domain" placeholder="网站域名">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>网站描述</label>
+                            <textarea rows="3" id="set_description" placeholder="网站SEO描述"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>管理员邮箱</label>
+                                <input type="email" id="set_email" placeholder="管理员邮箱">
+                            </div>
+                            <div class="form-group">
+                                <label>联系电话</label>
+                                <input type="text" id="set_phone" placeholder="联系电话">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>每日新增粉丝上限</label>
+                                <input type="number" id="set_fanLimit" placeholder="上限数量">
+                            </div>
+                            <div class="form-group">
+                                <label>留言自动回复</label>
+                                <select id="set_autoReply"><option value="开启">开启</option><option value="关闭">关闭</option></select>
+                            </div>
+                        </div>
+                        <div style="margin-top:20px;"><button type="submit" class="btn-save">保存设置</button></div>
+                    </form>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-header"><h3>账号安全</h3></div>
+                <div class="panel-body">
+                    <form class="settings-form" onsubmit="changePassword(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>当前密码</label>
+                                <input type="password" id="pw_current" placeholder="输入当前密码">
+                            </div>
+                            <div class="form-group">
+                                <label>新密码</label>
+                                <input type="password" id="pw_new" placeholder="输入新密码">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>确认新密码</label>
+                            <input type="password" id="pw_confirm" placeholder="再次输入新密码">
+                        </div>
+                        <button type="submit" class="btn-save">更新密码</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// ==========================================
+//  Auth & Utilities
+// ==========================================
+(function() {
+    if (localStorage.getItem('panpan_admin_token') !== 'authenticated') {
+        window.location.href = 'index.html';
+    }
+    document.getElementById('sidebarUserName').textContent =
+        localStorage.getItem('panpan_admin_user') || '管理员';
+})();
+
+const toast = document.getElementById('toast');
+function showToast(msg, type = 'success') {
+    toast.textContent = msg;
+    toast.className = `toast ${type} show`;
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ==========================================
+//  Modal System
+// ==========================================
+const modalOverlay = document.getElementById('modalOverlay');
+const modalBody = document.getElementById('modalBody');
+
+function openModal(html) {
+    modalBody.innerHTML = html;
+    modalOverlay.classList.add('show');
+}
+function closeModal() {
+    modalOverlay.classList.remove('show');
+}
+document.getElementById('modalClose').addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+
+// ==========================================
+//  Data Store (localStorage CRUD)
+// ==========================================
+function getStore(key, defaults) {
+    try {
+        const data = JSON.parse(localStorage.getItem('panpan_' + key));
+        if (data && Array.isArray(data) && data.length > 0) return data;
+    } catch(e) {}
+    // Initialize with defaults
+    localStorage.setItem('panpan_' + key, JSON.stringify(defaults));
+    return defaults;
+}
+function saveStore(key, data) {
+    localStorage.setItem('panpan_' + key, JSON.stringify(data));
+}
+
+// ==========================================
+//  Seed Data
+// ==========================================
+const SEED_FANS = [
+    { id:1, name:'盼盼全球官方群', region:'🌏 全球', members:58200, activity:92, status:'运营中' },
+    { id:2, name:'盼盼东京后援会', region:'🇯🇵 日本', members:12800, activity:88, status:'运营中' },
+    { id:3, name:'盼盼首尔应援站', region:'🇰🇷 韩国', members:9350, activity:85, status:'运营中' },
+    { id:4, name:'盼盼北美粉丝团', region:'🇺🇸 北美', members:7800, activity:76, status:'运营中' },
+    { id:5, name:'盼盼东南亚联盟', region:'🌏 东南亚', members:6500, activity:81, status:'运营中' },
+    { id:6, name:'盼盼欧洲粉丝会', region:'🇪🇺 欧洲', members:5200, activity:72, status:'筹备中' }
+];
+const SEED_PRODUCTS = [
+    { id:1, name:'「星光照耀」写真集', price:268, sales:12000, stock:340, status:'补货中' },
+    { id:2, name:'「盼盼」官方玩偶', price:188, sales:25000, stock:860, status:'在售' },
+    { id:3, name:'「追光者」应援T恤', price:158, sales:18000, stock:1560, status:'在售' },
+    { id:4, name:'「星河万里」专辑礼盒', price:328, sales:8000, stock:420, status:'在售' },
+    { id:5, name:'「流光」应援手灯', price:138, sales:35000, stock:2180, status:'在售' },
+    { id:6, name:'「追星日记」手帐套装', price:98, sales:20000, stock:3420, status:'在售' },
+    { id:7, name:'「星光」限定徽章', price:58, sales:5600, stock:0, status:'已售罄' }
+];
+const SEED_COOP = [
+    { id:1, name:'XX潮牌联名企划', partner:'XX Studio', type:'品牌联名', amount:800000, progress:75, status:'进行中' },
+    { id:2, name:'年度粉丝见面会', partner:'YY娱乐', type:'活动策划', amount:1200000, progress:40, status:'进行中' },
+    { id:3, name:'应援App开发合作', partner:'ZZ科技', type:'平台合作', amount:2000000, progress:20, status:'洽谈中' }
+];
+const SEED_INQUIRIES = [
+    { id:1, company:'XX文化传媒', contact:'王经理', intent:'品牌联名', date:'2026-05-22', status:'待联系' },
+    { id:2, company:'MM娱乐公司', contact:'李总监', intent:'艺人经纪', date:'2026-05-21', status:'已联系' },
+    { id:3, company:'NN电商平台', contact:'赵总', intent:'平台合作', date:'2026-05-19', status:'洽谈中' }
+];
+const SEED_STUDIO = [
+    { id:1, name:'林思雨', title:'创始人 & CEO', dept:'管理层', joined:'2020-03-01', status:'在职' },
+    { id:2, name:'陈子轩', title:'运营总监', dept:'运营部', joined:'2020-06-15', status:'在职' },
+    { id:3, name:'张艺馨', title:'创意总监', dept:'创意部', joined:'2021-01-10', status:'在职' },
+    { id:4, name:'刘明远', title:'技术总监', dept:'技术部', joined:'2021-04-20', status:'在职' },
+    { id:5, name:'王思涵', title:'粉丝运营经理', dept:'运营部', joined:'2022-03-08', status:'在职' },
+    { id:6, name:'周雨桐', title:'商务专员', dept:'商务部', joined:'2023-07-01', status:'在职' }
+];
+const SEED_MESSAGES = [
+    { id:1, name:'王女士', email:'wang@example.com', type:'周边产品咨询', msg:'请问"星河万里"专辑礼盒还有库存吗？想买一套收藏。', time:'今天 11:20', status:'未回复', reply:'' },
+    { id:2, name:'张先生', email:'zhang@example.com', type:'商业合作', msg:'我们是XX品牌，有意向与盼盼女神开展联名合作，请与我们联系。', time:'今天 09:45', status:'未回复', reply:'' },
+    { id:3, name:'李同学', email:'li@example.com', type:'粉丝社群加入', msg:'请问如何加入东京后援会？我目前在东京留学，想找到组织。', time:'昨天 22:15', status:'未回复', reply:'' },
+    { id:4, name:'陈先生', email:'chen@example.com', type:'工作室业务', msg:'我们想邀请盼盼工作室为我们的艺人提供粉丝运营服务，盼复。', time:'昨天 16:30', status:'已回复', reply:'感谢您的邀请，已安排商务同事与您对接。' },
+    { id:5, name:'赵女士', email:'zhao@example.com', type:'其他咨询', msg:'请问你们有线下实体店吗？想现场看看周边产品再下单。', time:'2026-05-21', status:'已回复', reply:'目前我们在上海有线下体验店，地址在浦东新区世纪大道100号，欢迎光临！' }
+];
+
+// ==========================================
+//  CRUD Managers
+// ==========================================
+let nextId = 100;
+
+function getId() { return nextId++; }
+
+// -- Fans --
+let fans = getStore('fans', SEED_FANS);
+function renderFans() {
+    const tbody = document.getElementById('fansTableBody');
+    if (fans.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon">🌐</div><p>暂无粉丝群，点击右上角"新建群组"创建</p></div></td></tr>';
+    } else {
+        tbody.innerHTML = fans.map(f => `
+            <tr>
+                <td>${f.name}</td>
+                <td>${f.region}</td>
+                <td>${f.members.toLocaleString()}</td>
+                <td>${f.activity}%</td>
+                <td><span class="status ${f.status === '运营中' ? 'active' : 'pending'}">${f.status}</span></td>
+                <td class="table-actions">
+                    <button class="edit-btn" onclick="openFanModal(${f.id})">编辑</button>
+                    <button class="del-btn" onclick="confirmDelete('fans', ${f.id}, '粉丝群「${f.name}」')">删除</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+    document.getElementById('badgeFans').textContent = fans.length;
+    updateDashboard();
+}
+function saveFan(data, id) {
+    if (id) {
+        const idx = fans.findIndex(f => f.id === id);
+        if (idx > -1) { fans[idx] = { ...fans[idx], ...data }; }
+    } else {
+        data.id = getId(); fans.push(data);
+    }
+    saveStore('fans', fans);
+    renderFans();
+    showToast(id ? '粉丝群已更新' : '粉丝群已创建');
+}
+function openFanModal(id) {
+    const f = id ? fans.find(x => x.id === id) : null;
+    openModal(`
+        <h2>${id ? '编辑粉丝群' : '新建粉丝群'}</h2>
+        <form onsubmit="event.preventDefault();saveFan({
+            name: fname.value, region: fregion.value,
+            members: parseInt(fmembers.value) || 0, activity: parseInt(factivity.value) || 0,
+            status: fstatus.value
+        }, ${id || 'null'}); closeModal();">
+            <div class="form-group"><label>群组名称</label><input id="fname" value="${f ? f.name : ''}" required></div>
+            <div class="form-group"><label>地区</label><input id="fregion" value="${f ? f.region : ''}" required></div>
+            <div class="form-row">
+                <div class="form-group"><label>成员数</label><input id="fmembers" type="number" value="${f ? f.members : ''}" required></div>
+                <div class="form-group"><label>活跃度(%)</label><input id="factivity" type="number" min="0" max="100" value="${f ? f.activity : ''}" required></div>
+            </div>
+            <div class="form-group"><label>状态</label><select id="fstatus"><option value="运营中" ${f && f.status === '运营中' ? 'selected' : ''}>运营中</option><option value="筹备中" ${f && f.status === '筹备中' ? 'selected' : ''}>筹备中</option><option value="已解散" ${f && f.status === '已解散' ? 'selected' : ''}>已解散</option></select></div>
+            <button type="submit" class="btn-submit">${id ? '保存修改' : '创建群组'}</button>
+        </form>
+    `);
+}
+
+// -- Products --
+let products = getStore('products', SEED_PRODUCTS);
+function renderProducts() {
+    const tbody = document.getElementById('productsTableBody');
+    if (products.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon">🎁</div><p>暂无商品，点击右上角"添加商品"创建</p></div></td></tr>';
+    } else {
+        products.sort((a,b) => b.sales - a.sales);
+        tbody.innerHTML = products.map(p => {
+            const statusClass = p.status === '在售' ? 'active' : p.status === '补货中' ? 'pending' : 'inactive';
+            return `<tr>
+                <td>${p.name}</td>
+                <td>¥${p.price}</td>
+                <td>${p.sales.toLocaleString()}+</td>
+                <td>${p.stock}</td>
+                <td><span class="status ${statusClass}">${p.status}</span></td>
+                <td class="table-actions">
+                    <button class="edit-btn" onclick="openProductModal(${p.id})">编辑</button>
+                    <button class="del-btn" onclick="confirmDelete('products', ${p.id}, '商品「${p.name}」')">删除</button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+    document.getElementById('badgeProducts').textContent = products.length;
+    updateDashboard();
+}
+function saveProduct(data, id) {
+    if (id) { const idx = products.findIndex(p => p.id === id); if (idx > -1) products[idx] = { ...products[idx], ...data }; }
+    else { data.id = getId(); products.push(data); }
+    saveStore('products', products); renderProducts();
+    showToast(id ? '商品已更新' : '商品已添加');
+}
+function openProductModal(id) {
+    const p = id ? products.find(x => x.id === id) : null;
+    openModal(`
+        <h2>${id ? '编辑商品' : '添加商品'}</h2>
+        <form onsubmit="event.preventDefault();saveProduct({
+            name: pname.value, price: parseFloat(pprice.value) || 0,
+            sales: parseInt(psales.value) || 0, stock: parseInt(pstock.value) || 0,
+            status: pstatus.value
+        }, ${id || 'null'}); closeModal();">
+            <div class="form-group"><label>商品名称</label><input id="pname" value="${p ? p.name : ''}" required></div>
+            <div class="form-row">
+                <div class="form-group"><label>价格 (¥)</label><input id="pprice" type="number" step="0.01" value="${p ? p.price : ''}" required></div>
+                <div class="form-group"><label>库存</label><input id="pstock" type="number" value="${p ? p.stock : ''}" required></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>累计销量</label><input id="psales" type="number" value="${p ? p.sales : ''}"></div>
+                <div class="form-group"><label>状态</label><select id="pstatus"><option value="在售" ${p && p.status === '在售' ? 'selected' : ''}>在售</option><option value="补货中" ${p && p.status === '补货中' ? 'selected' : ''}>补货中</option><option value="已售罄" ${p && p.status === '已售罄' ? 'selected' : ''}>已售罄</option><option value="已下架" ${p && p.status === '已下架' ? 'selected' : ''}>已下架</option></select></div>
+            </div>
+            <button type="submit" class="btn-submit">${id ? '保存修改' : '添加商品'}</button>
+        </form>
+    `);
+}
+
+// -- Cooperation --
+let coop = getStore('coop', SEED_COOP);
+function renderCoop() {
+    const tbody = document.getElementById('coopTableBody');
+    if (coop.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon">🤝</div><p>暂无合作项目，点击右上角"新建项目"创建</p></div></td></tr>';
+    } else {
+        tbody.innerHTML = coop.map(c => `
+            <tr>
+                <td>${c.name}</td>
+                <td>${c.partner}</td>
+                <td>${c.type}</td>
+                <td>¥${c.amount.toLocaleString()}</td>
+                <td>${c.progress}%</td>
+                <td><span class="status ${c.status === '进行中' ? 'active' : 'pending'}">${c.status}</span></td>
+                <td class="table-actions">
+                    <button class="edit-btn" onclick="openCoopModal(${c.id})">编辑</button>
+                    <button class="del-btn" onclick="confirmDelete('coop', ${c.id}, '项目「${c.name}」')">删除</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+    document.getElementById('badgeCoop').textContent = coop.length;
+    updateDashboard();
+}
+function saveCoop(data, id) {
+    if (id) { const idx = coop.findIndex(c => c.id === id); if (idx > -1) coop[idx] = { ...coop[idx], ...data }; }
+    else { data.id = getId(); coop.push(data); }
+    saveStore('coop', coop); renderCoop();
+    showToast(id ? '项目已更新' : '项目已创建');
+}
+function openCoopModal(id) {
+    const c = id ? coop.find(x => x.id === id) : null;
+    openModal(`
+        <h2>${id ? '编辑合作项目' : '新建合作项目'}</h2>
+        <form onsubmit="event.preventDefault();saveCoop({
+            name: cname.value, partner: cpartner.value, type: ctype.value,
+            amount: parseInt(camount.value) || 0, progress: parseInt(cprogress.value) || 0,
+            status: cstatus.value
+        }, ${id || 'null'}); closeModal();">
+            <div class="form-group"><label>项目名称</label><input id="cname" value="${c ? c.name : ''}" required></div>
+            <div class="form-row">
+                <div class="form-group"><label>合作方</label><input id="cpartner" value="${c ? c.partner : ''}" required></div>
+                <div class="form-group"><label>合作类型</label><select id="ctype"><option value="品牌联名" ${c && c.type === '品牌联名' ? 'selected' : ''}>品牌联名</option><option value="活动策划" ${c && c.type === '活动策划' ? 'selected' : ''}>活动策划</option><option value="平台合作" ${c && c.type === '平台合作' ? 'selected' : ''}>平台合作</option><option value="艺人经纪" ${c && c.type === '艺人经纪' ? 'selected' : ''}>艺人经纪</option></select></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>金额 (¥)</label><input id="camount" type="number" value="${c ? c.amount : ''}" required></div>
+                <div class="form-group"><label>进度 (%)</label><input id="cprogress" type="number" min="0" max="100" value="${c ? c.progress : ''}"></div>
+            </div>
+            <div class="form-group"><label>状态</label><select id="cstatus"><option value="进行中" ${c && c.status === '进行中' ? 'selected' : ''}>进行中</option><option value="洽谈中" ${c && c.status === '洽谈中' ? 'selected' : ''}>洽谈中</option><option value="已立项" ${c && c.status === '已立项' ? 'selected' : ''}>已立项</option><option value="已完成" ${c && c.status === '已完成' ? 'selected' : ''}>已完成</option></select></div>
+            <button type="submit" class="btn-submit">${id ? '保存修改' : '创建项目'}</button>
+        </form>
+    `);
+}
+
+// -- Inquiries (cooperation inquiries, simpler CRUD) --
+let inquiries = getStore('inquiries', SEED_INQUIRIES);
+function renderInquiries() {
+    const tbody = document.getElementById('inquiryTableBody');
+    if (inquiries.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon">📋</div><p>暂无合作咨询</p></div></td></tr>';
+    } else {
+        tbody.innerHTML = inquiries.map(i => `
+            <tr>
+                <td>${i.company}</td>
+                <td>${i.contact}</td>
+                <td>${i.intent}</td>
+                <td>${i.date}</td>
+                <td><span class="status ${i.status === '待联系' ? 'pending' : 'active'}">${i.status}</span></td>
+                <td class="table-actions">
+                    <button class="edit-btn" onclick="openInquiryModal(${i.id})">编辑</button>
+                    <button class="del-btn" onclick="confirmDelete('inquiries', ${i.id}, '咨询「${i.company}」')">删除</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+}
+function saveInquiry(data, id) {
+    if (id) { const idx = inquiries.findIndex(i => i.id === id); if (idx > -1) inquiries[idx] = { ...inquiries[idx], ...data }; }
+    else { data.id = getId(); inquiries.push(data); }
+    saveStore('inquiries', inquiries); renderInquiries();
+    showToast(id ? '咨询已更新' : '咨询已添加');
+}
+function openInquiryModal(id) {
+    const i = id ? inquiries.find(x => x.id === id) : null;
+    openModal(`
+        <h2>${id ? '编辑合作咨询' : '新建合作咨询'}</h2>
+        <form onsubmit="event.preventDefault();saveInquiry({
+            company: icompany.value, contact: icontact.value,
+            intent: iintent.value, date: idate.value,
+            status: istatus.value
+        }, ${id || 'null'}); closeModal();">
+            <div class="form-row">
+                <div class="form-group"><label>公司名称</label><input id="icompany" value="${i ? i.company : ''}" required></div>
+                <div class="form-group"><label>联系人</label><input id="icontact" value="${i ? i.contact : ''}" required></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>合作意向</label><input id="iintent" value="${i ? i.intent : ''}" required></div>
+                <div class="form-group"><label>提交日期</label><input id="idate" type="date" value="${i ? i.date : ''}" required></div>
+            </div>
+            <div class="form-group"><label>状态</label><select id="istatus"><option value="待联系" ${i && i.status === '待联系' ? 'selected' : ''}>待联系</option><option value="已联系" ${i && i.status === '已联系' ? 'selected' : ''}>已联系</option><option value="洽谈中" ${i && i.status === '洽谈中' ? 'selected' : ''}>洽谈中</option><option value="已签约" ${i && i.status === '已签约' ? 'selected' : ''}>已签约</option></select></div>
+            <button type="submit" class="btn-submit">${id ? '保存修改' : '添加咨询'}</button>
+        </form>
+    `);
+}
+
+// -- Studio --
+let studio = getStore('studio', SEED_STUDIO);
+function renderStudio() {
+    const tbody = document.getElementById('studioTableBody');
+    if (studio.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon">🎬</div><p>暂无成员，点击右上角"添加成员"创建</p></div></td></tr>';
+    } else {
+        tbody.innerHTML = studio.map(s => `
+            <tr>
+                <td>${s.name}</td>
+                <td>${s.title}</td>
+                <td>${s.dept}</td>
+                <td>${s.joined}</td>
+                <td><span class="status ${s.status === '在职' ? 'active' : 'inactive'}">${s.status}</span></td>
+                <td class="table-actions">
+                    <button class="edit-btn" onclick="openStudioModal(${s.id})">编辑</button>
+                    <button class="del-btn" onclick="confirmDelete('studio', ${s.id}, '成员「${s.name}」')">删除</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+}
+function saveStudio(data, id) {
+    if (id) { const idx = studio.findIndex(s => s.id === id); if (idx > -1) studio[idx] = { ...studio[idx], ...data }; }
+    else { data.id = getId(); studio.push(data); }
+    saveStore('studio', studio); renderStudio();
+    showToast(id ? '成员已更新' : '成员已添加');
+}
+function openStudioModal(id) {
+    const s = id ? studio.find(x => x.id === id) : null;
+    openModal(`
+        <h2>${id ? '编辑成员' : '添加成员'}</h2>
+        <form onsubmit="event.preventDefault();saveStudio({
+            name: sname.value, title: stitle.value, dept: sdept.value,
+            joined: sjoined.value, status: sstatus.value
+        }, ${id || 'null'}); closeModal();">
+            <div class="form-row">
+                <div class="form-group"><label>姓名</label><input id="sname" value="${s ? s.name : ''}" required></div>
+                <div class="form-group"><label>职位</label><input id="stitle" value="${s ? s.title : ''}" required></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>部门</label><input id="sdept" value="${s ? s.dept : ''}" required></div>
+                <div class="form-group"><label>入职时间</label><input id="sjoined" type="date" value="${s ? s.joined : ''}" required></div>
+            </div>
+            <div class="form-group"><label>状态</label><select id="sstatus"><option value="在职" ${s && s.status === '在职' ? 'selected' : ''}>在职</option><option value="离职" ${s && s.status === '离职' ? 'selected' : ''}>离职</option><option value="休假" ${s && s.status === '休假' ? 'selected' : ''}>休假</option></select></div>
+            <button type="submit" class="btn-submit">${id ? '保存修改' : '添加成员'}</button>
+        </form>
+    `);
+}
+
+// -- Messages --
+let messages = getStore('messages', SEED_MESSAGES);
+function renderMessages() {
+    const tbody = document.getElementById('messagesTableBody');
+    if (messages.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon">💬</div><p>暂无留言</p></div></td></tr>';
+    } else {
+        tbody.innerHTML = messages.map(m => `
+            <tr>
+                <td>${m.name}</td>
+                <td>${m.email}</td>
+                <td>${m.type}</td>
+                <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${m.msg}</td>
+                <td>${m.time}</td>
+                <td><span class="status ${m.status === '未回复' ? 'pending' : 'active'}">${m.status}</span></td>
+                <td class="table-actions">
+                    <button class="view-btn" onclick="openReplyModal(${m.id})">${m.status === '未回复' ? '回复' : '查看'}</button>
+                    <button class="del-btn" onclick="confirmDelete('messages', ${m.id}, '留言（${m.name}）')">删除</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+    document.getElementById('badgeMessages').textContent = messages.length;
+}
+function saveMessageReply(id, reply) {
+    const idx = messages.findIndex(m => m.id === id);
+    if (idx > -1) { messages[idx].status = '已回复'; messages[idx].reply = reply; }
+    saveStore('messages', messages); renderMessages();
+    showToast('回复已发送');
+}
+function openReplyModal(id) {
+    const m = messages.find(x => x.id === id);
+    if (!m) return;
+    openModal(`
+        <h2>${m.status === '未回复' ? '回复留言' : '留言详情'}</h2>
+        <div class="reply-meta">${m.name}（${m.email}）· ${m.type} · ${m.time}</div>
+        <div class="reply-content">${m.msg}</div>
+        ${m.reply ? `<div style="margin-bottom:12px;"><strong>已回复：</strong><div class="reply-content" style="background:rgba(201,169,110,0.08);">${m.reply}</div></div>` : ''}
+        ${m.status === '未回复' ? `
+        <form onsubmit="event.preventDefault();saveMessageReply(${m.id}, replyText.value); closeModal();">
+            <div class="form-group"><label>回复内容</label><textarea id="replyText" rows="4" placeholder="请输入回复内容..." required></textarea></div>
+            <button type="submit" class="btn-submit">发送回复</button>
+        </form>` : `<div style="text-align:center;color:#999;font-size:0.88rem;">该留言已回复</div>`}
+    `);
+}
+
+// ==========================================
+//  Delete (with confirmation)
+// ==========================================
+function confirmDelete(storeKey, id, label) {
+    openModal(`
+        <div class="confirm-dialog">
+            <div class="confirm-icon">⚠️</div>
+            <h2>确认删除</h2>
+            <p>确定要删除 <strong>${label}</strong> 吗？此操作不可撤销。</p>
+            <div class="confirm-actions">
+                <button class="btn-save" onclick="closeModal()">取消</button>
+                <button class="btn-submit danger" onclick="doDelete('${storeKey}', ${id}); closeModal();">确认删除</button>
+            </div>
+        </div>
+    `);
+}
+function doDelete(storeKey, id) {
+    const store = {
+        fans, products, coop, inquiries, studio, messages
+    };
+    const setters = {
+        fans: (v) => { fans = v; saveStore('fans', fans); renderFans(); },
+        products: (v) => { products = v; saveStore('products', products); renderProducts(); },
+        coop: (v) => { coop = v; saveStore('coop', coop); renderCoop(); },
+        inquiries: (v) => { inquiries = v; saveStore('inquiries', inquiries); renderInquiries(); },
+        studio: (v) => { studio = v; saveStore('studio', studio); renderStudio(); },
+        messages: (v) => { messages = v; saveStore('messages', messages); renderMessages(); }
+    };
+    const arr = store[storeKey];
+    if (!arr) return;
+    const filtered = arr.filter(item => item.id !== id);
+    setters[storeKey](filtered);
+    showToast('删除成功');
+}
+
+// ==========================================
+//  Settings
+// ==========================================
+function loadSettings() {
+    const s = JSON.parse(localStorage.getItem('panpan_settings') || '{}');
+    document.getElementById('set_siteName').value = s.siteName || '盼盼女神';
+    document.getElementById('set_domain').value = s.domain || 'panpan-goddess.vercel.app';
+    document.getElementById('set_description').value = s.description || '全球领先的追星服务平台，连接粉丝与偶像，打造专属粉丝文化生态。';
+    document.getElementById('set_email').value = s.email || 'admin@panpangoddess.com';
+    document.getElementById('set_phone').value = s.phone || '+86 21 6888-8888';
+    document.getElementById('set_fanLimit').value = s.fanLimit || '5000';
+    document.getElementById('set_autoReply').value = s.autoReply || '开启';
+}
+function saveSettings(e) {
+    e.preventDefault();
+    const settings = {
+        siteName: document.getElementById('set_siteName').value,
+        domain: document.getElementById('set_domain').value,
+        description: document.getElementById('set_description').value,
+        email: document.getElementById('set_email').value,
+        phone: document.getElementById('set_phone').value,
+        fanLimit: document.getElementById('set_fanLimit').value,
+        autoReply: document.getElementById('set_autoReply').value
+    };
+    localStorage.setItem('panpan_settings', JSON.stringify(settings));
+    showToast('设置已保存');
+}
+function changePassword(e) {
+    e.preventDefault();
+    const current = document.getElementById('pw_current').value;
+    const pw = document.getElementById('pw_new').value;
+    const confirm = document.getElementById('pw_confirm').value;
+    if (!current || !pw || !confirm) { showToast('请填写所有密码字段', 'error'); return; }
+    if (pw !== confirm) { showToast('两次输入的新密码不一致', 'error'); return; }
+    if (pw.length < 6) { showToast('密码长度至少6位', 'error'); return; }
+    localStorage.setItem('panpan_admin_password', pw);
+    showToast('密码已更新');
+    document.getElementById('pw_current').value = '';
+    document.getElementById('pw_new').value = '';
+    document.getElementById('pw_confirm').value = '';
+}
+
+// ==========================================
+//  Dashboard Updates
+// ==========================================
+function updateDashboard() {
+    // Total fans
+    const totalFans = fans.reduce((sum, f) => sum + f.members, 0);
+    document.getElementById('statFans').textContent = (totalFans / 10000).toFixed(1) + '万';
+
+    // Total sales (from products price * sales, rough estimate)
+    const totalSales = products.reduce((sum, p) => sum + (p.price * p.sales), 0);
+    document.getElementById('statSales').textContent = '¥' + (totalSales / 10000).toFixed(1) + '万';
+
+    // Project count
+    document.getElementById('statProjects').textContent = coop.length;
+
+    // Satisfaction - rough from fans activity
+    const avgActivity = fans.length ? Math.round(fans.reduce((s, f) => s + f.activity, 0) / fans.length) : 0;
+    document.getElementById('statSatisfaction').textContent = avgActivity + '%';
+
+    // Recent activity
+    const activities = [];
+    const now = new Date();
+    fans.forEach(f => {
+        activities.push({ text: `粉丝群「${f.name}」${f.status === '运营中' ? '运营中' : '状态更新为' + f.status}，成员 ${f.members.toLocaleString()} 人`, time: '今日', dot: 'gold' });
+    });
+    if (products.length) {
+        const top = products[0];
+        activities.push({ text: `热销商品「${top.name}」累计销量 ${top.sales.toLocaleString()}+`, time: '今日', dot: 'rose' });
+    }
+    if (messages.length) {
+        const pending = messages.filter(m => m.status === '未回复').length;
+        if (pending > 0) activities.push({ text: `${pending} 条留言待回复`, time: '今日', dot: 'navy' });
+    }
+    const activityHtml = activities.slice(0, 5).map(a => `
+        <div class="activity-item">
+            <div class="activity-dot ${a.dot}"></div>
+            <div class="act-content">
+                <div class="act-text">${a.text}</div>
+                <div class="act-time">${a.time}</div>
+            </div>
+        </div>
+    `).join('') || '<div class="empty-state"><div class="icon">📭</div><p>暂无活动记录</p></div>';
+    document.getElementById('recentActivity').innerHTML = activityHtml;
+
+    // Top products
+    const sorted = [...products].sort((a,b) => b.sales - a.sales).slice(0, 5);
+    const topHtml = sorted.length ? `
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>商品</th><th>销量</th><th>库存</th><th>状态</th></tr></thead>
+                <tbody>${sorted.map(p => {
+                    const sc = p.status === '在售' ? 'active' : p.status === '补货中' ? 'pending' : 'inactive';
+                    return `<tr><td>${p.name}</td><td>${p.sales.toLocaleString()}+</td><td>${p.stock}</td><td><span class="status ${sc}">${p.status}</span></td></tr>`;
+                }).join('')}</tbody>
+            </table>
+        </div>
+    ` : '<div class="empty-state"><div class="icon">📦</div><p>暂无商品数据</p></div>';
+    document.getElementById('topProducts').innerHTML = topHtml;
+
+    // Trend chart
+    const trend = document.getElementById('trendChart');
+    const heights = [35, 45, 30, 55, 50, 65, 70, 60, 75, 85, 90, 100];
+    trend.innerHTML = heights.map((h, i) => {
+        const baseColor = i >= 9 ? '#c9a96e' : 'rgba(201,169,110,0.4)';
+        const grad = i === 11 ? 'background:linear-gradient(to top,#c9a96e,#e8c88a)' : `background:${baseColor}`;
+        return `<div style="height:${h}%;${grad};border-radius:4px 4px 0 0;" title="${i+1}月"></div>`;
+    }).join('');
+}
+
+// ==========================================
+//  Init
+// ==========================================
+renderFans();
+renderProducts();
+renderCoop();
+renderInquiries();
+renderStudio();
+renderMessages();
+loadSettings();
+
+// ==========================================
+//  Navigation
+// ==========================================
+const navItems = document.querySelectorAll('.nav-item[data-page]');
+const pageSections = document.querySelectorAll('.page-section');
+const pageTitle = document.getElementById('pageTitle');
+const breadcrumbText = document.getElementById('breadcrumbText');
+const pageNames = {
+    dashboard:'数据总览', fans:'粉丝群管理', products:'周边商品',
+    cooperation:'商业合作', studio:'工作室管理', messages:'留言管理', settings:'系统设置'
+};
+navItems.forEach(item => {
+    item.addEventListener('click', () => {
+        const page = item.dataset.page;
+        navItems.forEach(n => n.classList.remove('active'));
+        item.classList.add('active');
+        pageSections.forEach(s => s.classList.remove('active'));
+        document.getElementById(`page-${page}`).classList.add('active');
+        pageTitle.textContent = pageNames[page] || page;
+        breadcrumbText.textContent = pageNames[page] || page;
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('show');
+    });
+});
+
+document.getElementById('sidebarToggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('sidebarOverlay').classList.add('show');
+});
+document.getElementById('sidebarOverlay').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('show');
+});
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('panpan_admin_token');
+    localStorage.removeItem('panpan_admin_user');
+    window.location.href = 'index.html';
+});
+
+function updateClock() {
+    const opts = { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false };
+    document.getElementById('clockDisplay').textContent = new Date().toLocaleDateString('zh-CN', opts);
+}
+updateClock();
+setInterval(updateClock, 1000);
+</script>
+</body>
+</html>

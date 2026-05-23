@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>盼盼女神 · 管理后台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', 'Noto Serif SC', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            background: #f5f3f0;
+            color: #1a1a2e;
+        }
+
+        /* ===== Login Side ===== */
+        .login-side {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #faf8f5 0%, #f0ebe3 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .login-side::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .login-box {
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            z-index: 1;
+        }
+        .login-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+        .login-logo .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #c9a96e, #e8c88a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+        .login-subtitle {
+            font-size: 0.92rem;
+            color: #888;
+            margin-bottom: 40px;
+        }
+        .login-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .login-desc {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 6px;
+        }
+        .form-group .input-wrap {
+            position: relative;
+        }
+        .form-group .input-wrap .icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            color: #999;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 13px 16px 13px 44px;
+            border: 1.5px solid #e5e0da;
+            border-radius: 12px;
+            font-size: 0.92rem;
+            font-family: inherit;
+            background: #fff;
+            transition: all 0.3s;
+            outline: none;
+        }
+        .form-group input:focus {
+            border-color: #c9a96e;
+            box-shadow: 0 0 0 3px rgba(201,169,110,0.12);
+        }
+        .form-group .error-text {
+            font-size: 0.8rem;
+            color: #e74c3c;
+            margin-top: 6px;
+            display: none;
+        }
+        .form-group.error input {
+            border-color: #e74c3c;
+        }
+        .form-group.error .error-text {
+            display: block;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .form-options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #666;
+            cursor: pointer;
+        }
+        .form-options label input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #c9a96e;
+        }
+        .form-options a {
+            font-size: 0.85rem;
+            color: #c9a96e;
+            text-decoration: none;
+        }
+        .form-options a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #c9a96e, #e8c88a);
+            color: #1a1a2e;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(201,169,110,0.3);
+        }
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.82rem;
+            color: #999;
+        }
+        .login-footer a {
+            color: #c9a96e;
+            text-decoration: none;
+        }
+
+        /* ===== Brand Side ===== */
+        .brand-side {
+            width: 480px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        .brand-side::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            left: -30%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(201,169,110,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .brand-side::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(201,169,110,0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .brand-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: #fff;
+        }
+        .brand-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .brand-content h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .brand-content p {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.55);
+            line-height: 1.8;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        .brand-features {
+            margin-top: 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            align-items: flex-start;
+            max-width: 280px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+        }
+        .brand-features .bf-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.6);
+        }
+        .brand-features .bf-item .check {
+            width: 22px;
+            height: 22px;
+            background: rgba(201,169,110,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #c9a96e;
+            flex-shrink: 0;
+        }
+
+        /* ===== Toast ===== */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #fff;
+            opacity: 0;
+            transform: translateX(30px);
+            transition: all 0.4s;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .toast.error { background: #e74c3c; }
+        .toast.success { background: #27ae60; }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 900px) {
+            .brand-side { display: none; }
+            .login-side { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="login-side">
+    <div class="login-box">
+        <div class="login-logo">
+            <span class="logo-icon">✦</span>
+            盼盼女神
+        </div>
+        <div class="login-subtitle">管理后台</div>
+
+        <div class="login-title">欢迎回来</div>
+        <div class="login-desc">请登录您的管理员账户</div>
+
+        <form id="loginForm" autocomplete="off">
+            <div class="form-group" id="usernameGroup">
+                <label>管理员账号</label>
+                <div class="input-wrap">
+                    <span class="icon">👤</span>
+                    <input type="text" id="username" placeholder="请输入账号" autocomplete="username">
+                </div>
+                <div class="error-text">请输入账号</div>
+            </div>
+            <div class="form-group" id="passwordGroup">
+                <label>登录密码</label>
+                <div class="input-wrap">
+                    <span class="icon">🔒</span>
+                    <input type="password" id="password" placeholder="请输入密码" autocomplete="current-password">
+                </div>
+                <div class="error-text">请输入密码</div>
+            </div>
+            <div class="form-options">
+                <label>
+                    <input type="checkbox" id="remember"> 记住我
+                </label>
+                <a href="#">忘记密码？</a>
+            </div>
+            <button type="submit" class="btn-login" id="loginBtn">登 录</button>
+        </form>
+        <div class="login-footer">
+            <span>默认账号: admin / 密码: admin888</span>
+        </div>
+    </div>
+</div>
+
+<div class="brand-side">
+    <div class="brand-content">
+        <div class="brand-icon">✦</div>
+        <h2>盼盼女神</h2>
+        <p>全球领先的追星服务平台管理中心</p>
+        <div class="brand-features">
+            <div class="bf-item"><span class="check">✓</span> 粉丝社群数据实时监控</div>
+            <div class="bf-item"><span class="check">✓</span> 周边商品库存管理</div>
+            <div class="bf-item"><span class="check">✓</span> 商业合作商机追踪</div>
+            <div class="bf-item"><span class="check">✓</span> 工作室运营数据总览</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const loginForm = document.getElementById('loginForm');
+    const username = document.getElementById('username');
+    const password = document.getElementById('password');
+    const usernameGroup = document.getElementById('usernameGroup');
+    const passwordGroup = document.getElementById('passwordGroup');
+    const loginBtn = document.getElementById('loginBtn');
+    const toast = document.getElementById('toast');
+
+    // Check if already logged in
+    if (localStorage.getItem('panpan_admin_token') === 'authenticated') {
+        window.location.href = 'dashboard.html';
+    }
+
+    function showToast(msg, type = 'error') {
+        toast.textContent = msg;
+        toast.className = `toast ${type} show`;
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function setLoading(loading) {
+        loginBtn.disabled = loading;
+        loginBtn.textContent = loading ? '登录中...' : '登 录';
+    }
+
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const user = username.value.trim();
+        const pass = password.value.trim();
+        let valid = true;
+
+        if (!user) {
+            usernameGroup.classList.add('error');
+            valid = false;
+        } else {
+            usernameGroup.classList.remove('error');
+        }
+        if (!pass) {
+            passwordGroup.classList.add('error');
+            valid = false;
+        } else {
+            passwordGroup.classList.remove('error');
+        }
+        if (!valid) return;
+
+        setLoading(true);
+
+        // Simulate API call
+        setTimeout(() => {
+            // Demo credentials: admin / admin888
+            if (user === 'admin' && pass === 'admin888') {
+                showToast('登录成功，正在跳转...', 'success');
+                localStorage.setItem('panpan_admin_token', 'authenticated');
+                localStorage.setItem('panpan_admin_user', user);
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 800);
+            } else {
+                showToast('账号或密码错误，请重试');
+                setLoading(false);
+            }
+        }, 1000);
+    });
+
+    // Clear error on input
+    username.addEventListener('input', () => usernameGroup.classList.remove('error'));
+    password.addEventListener('input', () => passwordGroup.classList.remove('error'));
+</script>
+</body>
+</html>
