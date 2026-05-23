@@ -8,6 +8,7 @@
     <title>盼盼女神 | 追星服务平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="data/github-data.js"></script>
     <style>
         /* ===== Reset & Base ===== */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1389,6 +1390,59 @@
         });
     }, { threshold: 0.5 });
     document.querySelectorAll('.hero-stat .number').forEach(el => counterObserver.observe(el));
+</script>
+
+<!-- 数据加载器：将后台CRUD数据同步到前台显示 -->
+<script>
+(async function() {
+    try {
+        const [fans, products, studio] = await Promise.all([
+            loadData('fans.json').catch(() => null),
+            loadData('products.json').catch(() => null),
+            loadData('studio.json').catch(() => null)
+        ]);
+
+        if (fans && fans.length) {
+            const total = fans.reduce((s, f) => s + (f.members || 0), 0);
+            const stats = document.querySelectorAll('.hero-stat .number');
+            if (stats.length >= 3) {
+                stats[0].textContent = (total / 10000).toFixed(1) + '万+';
+                stats[1].textContent = fans.length + '+';
+            }
+        }
+
+        if (products && products.length) {
+            // 更新商品卡片
+            const productCards = document.querySelectorAll('.product-card');
+            products.forEach((p, i) => {
+                if (i >= productCards.length) return;
+                const card = productCards[i];
+                const tag = card.querySelector('.tag');
+                const name = card.querySelector('h3');
+                const desc = card.querySelector('p');
+                const price = card.querySelector('.price');
+                if (name) name.textContent = p.name;
+                if (price) price.innerHTML = '¥' + p.price + ' <small>已售 ' + (p.sales || 0).toLocaleString() + '+</small>';
+            });
+        }
+
+        if (studio && studio.length) {
+            // 更新团队成员
+            const members = document.querySelectorAll('.team-member');
+            studio.forEach((s, i) => {
+                if (i >= members.length) return;
+                const m = members[i];
+                const name = m.querySelector('h4');
+                const role = m.querySelector('.role');
+                if (name) name.textContent = s.name;
+                if (role) role.textContent = s.title;
+            });
+        }
+    } catch(e) {
+        // 静默失败，保持静态数据
+        console.warn('数据加载失败，使用默认内容', e);
+    }
+})();
 </script>
 
 <!-- 百度自动推送 -->
