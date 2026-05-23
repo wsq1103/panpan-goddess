@@ -1,0 +1,5 @@
+[
+  {"id":1,"company":"XX文化传媒","contact":"王经理","intent":"品牌联名","date":"2026-05-22","status":"待联系"},
+  {"id":2,"company":"MM娱乐公司","contact":"李总监","intent":"艺人经纪","date":"2026-05-21","status":"已联系"},
+  {"id":3,"company":"NN电商平台","contact":"赵总","intent":"平台合作","date":"2026-05-19","status":"洽谈中"}
+]

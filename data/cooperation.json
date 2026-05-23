@@ -1,0 +1,5 @@
+[
+  {"id":1,"name":"XX潮牌联名企划","partner":"XX Studio","type":"品牌联名","amount":800000,"progress":75,"status":"进行中"},
+  {"id":2,"name":"年度粉丝见面会","partner":"YY娱乐","type":"活动策划","amount":1200000,"progress":40,"status":"进行中"},
+  {"id":3,"name":"应援App开发合作","partner":"ZZ科技","type":"平台合作","amount":2000000,"progress":20,"status":"洽谈中"}
+]

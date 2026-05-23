@@ -1,0 +1,9 @@
+[
+  {"id":1,"name":"「星光照耀」写真集","price":268,"sales":12000,"stock":340,"status":"补货中"},
+  {"id":2,"name":"「盼盼」官方玩偶","price":188,"sales":25000,"stock":860,"status":"在售"},
+  {"id":3,"name":"「追光者」应援T恤","price":158,"sales":18000,"stock":1560,"status":"在售"},
+  {"id":4,"name":"「星河万里」专辑礼盒","price":328,"sales":8000,"stock":420,"status":"在售"},
+  {"id":5,"name":"「流光」应援手灯","price":138,"sales":35000,"stock":2180,"status":"在售"},
+  {"id":6,"name":"「追星日记」手帐套装","price":98,"sales":20000,"stock":3420,"status":"在售"},
+  {"id":7,"name":"「星光」限定徽章","price":58,"sales":5600,"stock":0,"status":"已售罄"}
+]
